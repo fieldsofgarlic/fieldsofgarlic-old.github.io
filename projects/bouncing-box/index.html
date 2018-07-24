@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Bouncing Box</title>
+	<script src="jquery.min.js"></script>
+
+<!-- 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+
+	<!-- BEGIN CSS -->
+	<style>
+		/* TODO 1 */
+		[class="box"] {
+			display: block;
+			position: absolute;
+			width: 70px;
+			height: 70px;
+			top: 100px;
+			left: 0px;
+			background: radial-gradient( circle at 25px 25px, lightgreen, darkgreen 70%, darkslategrey 10%); 
+			font-size: 300%;
+			text-align: center;
+			border-radius: 35px;
+			font-family: impact;
+		}
+		body {
+			background: url(https://png.pngtree.com/thumb_back/fw800/back_pic/04/07/29/8258119d8abe61b.jpg) no-repeat center center fixed;
+			background-size: cover;
+		}
+		.board {
+			width:100vw;
+			height:100vh;
+		}
+	</style>
+
+</head>
+<body class="board">
+	<!-- HTML for the box -->
+	<div class="box">?</div>
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script>
+		(function(){
+			'use strict'
+			/* global &*/
+
+			// Variable declarations
+			var box;
+			var boardWidth;
+			var boardHeight;
+			var boxWidth;
+			var boxHeight;
+			var update;
+			var handleBoxClick;
+			var rgRhighlight;
+			var rgGhighlight;
+			var rgBhighlight;
+			var rgRmidrange;
+			var rgGmidrange;
+			var rgBmidrange;
+			var rgRshade;
+			var rgGshade;
+			var rgBshade;
+			var boxBG;
+
+			// jQuery stuff setup for you
+			box = $('.box');
+			boardWidth = $('.board').width();
+			boardHeight = $('.board').height();
+			boxWidth = box.css('width').replace(/[^-\d\.]/g, '');
+			boxHeight = box.css('height').replace(/[^-\d\.]/g, '');
+			
+			function randomRadialGradient( range ) {
+				if ( range === undefined ) {
+					range = 175;
+				}
+				var highLowRange = ( 255 - range ) / 2;
+				rgRmidrange = Math.floor( Math.random() * range ) + highLowRange;
+				rgGmidrange = Math.floor( Math.random() * range ) + highLowRange;
+				rgBmidrange = Math.floor( Math.random() * range ) + highLowRange;
+				rgRhighlight = 255 - Math.floor( rgRmidrange / range ) * highLowRange;
+				rgGhighlight = 255 - Math.floor( rgGmidrange / range ) * highLowRange;
+				rgBhighlight = 255 - Math.floor( rgBmidrange / range ) * highLowRange;
+				rgRshade = Math.floor( rgRmidrange / range ) * highLowRange;
+				rgGshade = Math.floor( rgGmidrange / range ) * highLowRange;
+				rgBshade = Math.floor( rgBmidrange / range ) * highLowRange;
+				boxBG = 'radial-gradient( circle at 25px 25px, rgb(' + rgRhighlight + ',' + rgGhighlight + ',' + rgBhighlight + '), rgb(' + rgRmidrange + ',' + rgGmidrange + ',' + rgBmidrange + '), rgb(' + rgRshade + ',' + rgGshade + ',' + rgBshade + ') )';
+				return boxBG;
+			}
+			
+			box.css('background', randomRadialGradient());
+
+			// TODO 2
+			var xPosition;
+			var yPosition;
+			var points;
+			var speed;
+			var xDirection;
+			var yDirection;
+			
+			xPosition = 10;
+			yPosition = 100;
+			points = 0;
+			speed = 10;
+			xDirection = Math.random();
+			yDirection = Math.random();
+			
+			box.css('left', xPosition);      // changes the 'left' css property of the box to value of var position
+			box.css('top', yPosition);      // changes the 'left' css property of the box to value of var position
+			box.text(points);               // changes the text of the box to display the value of var points
+			
+			function update() {
+				// TODO 3 / 6 / 7 / 8
+			    xPosition = xPosition + (speed * xDirection);
+			    yPosition = yPosition + (speed * yDirection);
+    			box.text(points);
+    			if(xPosition > (boardWidth - boxWidth)) {
+    				xDirection = -Math.random();
+    				console.log( "changed xDirection to " + xDirection );
+				}
+    			if(xPosition < 0) {
+    				xDirection = Math.random();
+    				console.log( "changed xDirection to " + xDirection );
+				}
+    			if(yPosition > (boardHeight - boxHeight)) {
+    				yDirection = -Math.random();
+    				console.log( "changed yDirection to " + yDirection );
+				}
+    			if(yPosition < 0) {
+    				yDirection = Math.random();
+    				console.log( "changed yDirection to " + yDirection );
+				}
+    			box.css('left', xPosition);	
+    			box.css('top', yPosition);	
+    			//console.log( "xPos = " + xPosition + ", yPos = " + yPosition );
+			};
+
+			function handleBoxClick() {
+				// TODO 4 / 5
+				speed = speed + 3;
+				xPosition = Math.floor( Math.random() * (boardWidth - boxWidth) );
+				yPosition = Math.floor( Math.random() * (boardHeight - boxHeight) );
+				xDirection = Math.random();
+				yDirection = Math.random();
+				points = points + 1;
+				box.css('background', randomRadialGradient());
+			};
+
+
+			//this calls update every 50 milliseconds
+			setInterval(update, 50);
+			// this calls the handle handleBoxClick function every time the box is clicked on
+			box.on('click', handleBoxClick);
+		})();
+	</script>
+</body>
+</html>
